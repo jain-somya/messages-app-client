@@ -1,78 +1,78 @@
 import React from "react";
-import "./Chat.css";
-import { Avatar, IconButton } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import SearchOutlined from "@mui/icons-material/SearchOutlined";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
-import SendIcon from "@mui/icons-material/Send";
-import MicIcon from "@mui/icons-material/Mic";
-import Message from "./Message";
+
 import axios from "../axios";
 import { useEffect, useState } from "react";
 
-export default function SendMessage({ messages }) {
-  const [text, setText] = useState("");
-  const [seed,setSeed] = useState('')
+import { useLocation } from "react-router-dom";
+
+export default function SendMessage({ to }) {
+  const [text, setText] = useState(
+    `Hi! Your Otp is: ${Math.floor(100000 + Math.random() * 900000)}`
+  );
+  const [num, setNum] = useState(to);
+  const location = useLocation();
   useEffect(() => {
-    setSeed(Math.floor(Math.random()*5000))
-  }, [])
-  function handleForm(e) {
+    setNum(location.state?.to);
+  }, []);
+  async function handleForm(e) {
     e.preventDefault();
-    axios
-      .post("/messages/new", {
-        message: text,
-        name: "name1",
-        timestamp: `${new Date().toUTCString()}`,
-        received: "false",
-      })
-      .then((result) => {});
+    try {
+      const res = await axios.post("/create/message", {
+        msg: text,
+        to: num,
+      });
+    alert(res.data.msg)
+    } catch (err) {
+      alert("Please check that your Number is in this format: +91989998232");
+    }
   }
   return (
-    <div className="chat">
-      <div className="chat__header">
-        <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg?background=%23ebebeb`}/>
-        <div className="chat__headerCenter">
-          <h3>Group Name</h3>
-          <p>Last seen at 10:50 pm</p>
-        </div>
-        <div className="chat__headerRight"></div>
-        <IconButton>
-          <SearchOutlined />
-        </IconButton>
-        <IconButton>
-          <AttachFileIcon />
-        </IconButton>
-        <IconButton>
-          <MoreVertIcon />
-        </IconButton>
-      </div>
-      <div className="chat__body">
-        {messages.map((message,index) => {
-          return <Message key={index} message={message} />;
-        })}
-      </div>
-      <div className="chat__footer">
-        <div className="chat__footerLeft"></div>
-        <IconButton>
-          <InsertEmoticonIcon />
-        </IconButton>
+    <div className="grid place-items-center h-screen bg-blue-100">
+      <form
+        onSubmit={(e) => handleForm(e)}
+        className="flex w-full max-w-sm space-x-3"
+      >
+        <div className="w-full max-w-2xl px-5 py-10 m-auto mt-10 bg-white rounded-lg shadow dark:bg-gray-800">
+          <div className="mb-6 text-3xl font-light text-center text-gray-800 dark:text-white">
+            Send OTP
+          </div>
+          <div className=" ">
+            <div className=" relative ">
+              <input
+                value={num}
+                onChange={(e) => setNum(e.target.value)}
+                type="text"
+                id="contact-form-name"
+                className=" p-2 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                placeholder="To"
+              />
+            </div>
 
-        <div className="chat__footerText">
-          <form onSubmit={(e) => handleForm(e)}>
-            <input
-              placeholder="Type a message"
-              onChange={(e) => setText(e.target.value)}
-            ></input>
-            <button type="submit" className="sendButton">
-              <SendIcon />
-            </button>
-          </form>
+            <div className="">
+              <label className="text-gray-700" htmlFor="name">
+                <textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  className="flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  id="comment"
+                  placeholder="Enter Message"
+                  name="comment"
+                  rows={5}
+                  cols={40}
+                />
+              </label>
+            </div>
+            <div className="col-span-2 text-right">
+              <button
+                type="submit"
+                className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+              >
+                Send
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="chat__footerRight">
-          <MicIcon />
-        </div>
-      </div>
+      </form>
     </div>
   );
 }

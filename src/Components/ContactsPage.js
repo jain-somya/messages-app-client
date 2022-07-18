@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
 import axios from "../axios";
 import { Avatar, IconButton } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import { Link } from "react-router-dom";
 
-function MessageList() {
-  const [messages, setMessages] = useState([]);
+function ContactPage() {
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      axios.get("/messages").then((res) => {
-        setMessages(res.data);
+    const fetchContacts = async () => {
+      axios.get("/contacts").then((res) => {
+        setContacts(res.data);
+        console.log(res.data)
+
       });
     };
-    fetchMessages();
+    fetchContacts();
   }, []);
   return (
     <div className="grid place-items-center h-screen">
       {/* <Link to="/add-number">Add number</Link> */}
-      <h2>Messages</h2>
+      <h2>Contact List</h2>
 
       <div className="container mx-auto px-4 sm:px-8 max-w-3xl">
         <div className="py-8">
@@ -29,30 +33,25 @@ function MessageList() {
                       scope="col"
                       className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal"
                     >
-                      To
+                      Name
                     </th>
                     <th
                       scope="col"
                       className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal"
                     >
-                      Message
+                      Number
                     </th>
+
                     <th
                       scope="col"
                       className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal"
                     >
-                      Date
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal"
-                    >
-                      status
+                      Send Message
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {messages.map((message) => (
+                  {contacts.map((contact) => (
                     <tr>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <div className="flex items-center">
@@ -68,36 +67,28 @@ function MessageList() {
                           </div>
                           <div className="ml-3">
                             <p className="text-gray-900 whitespace-no-wrap">
-                              {message.to}
+                              {contact.name}
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {message.msg}
+                          {contact.number}
                         </p>
                       </td>
+
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p className="text-gray-900 whitespace-no-wrap">
-                          { (message?.created?.seconds*1000 +message?.created?.nanoseconds*0.001) ? `${new Date(message.created.seconds*1000 +message.created.nanoseconds*0.001).toISOString()}` :''  }
-                        </p>
-                      </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span
-                          className={`relative inline-block px-3 py-1 font-semibold text-${
-                            message.status ? "green" : "red"
-                          }-900 leading-tight`}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className={`absolute inset-0 bg-${
-                              message.status ? "green" : "red"
-                            }-200 opacity-50 rounded-full`}
-                          ></span>
-                          <span className="relative">
-                            {message.status ? "Success" : "Failed"}
-                          </span>
+                        <span className="relative">
+                          <Link
+                            to="/new-message"
+                            state={{ to: contact.number }}
+                          >
+                            {" "}
+                            <IconButton>
+                              <SendIcon />
+                            </IconButton>
+                          </Link>
                         </span>
                       </td>
                     </tr>
@@ -112,4 +103,4 @@ function MessageList() {
   );
 }
 
-export default MessageList;
+export default ContactPage;
