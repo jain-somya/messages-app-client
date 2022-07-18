@@ -16,8 +16,6 @@ function MessageList() {
   return (
     <div className="grid place-items-center h-screen">
       {/* <Link to="/add-number">Add number</Link> */}
-      <h2>Messages</h2>
-
       <div className="container mx-auto px-4 sm:px-8 max-w-3xl">
         <div className="py-8">
           <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">

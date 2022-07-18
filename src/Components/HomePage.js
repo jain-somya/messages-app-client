@@ -19,9 +19,9 @@ function HomePage() {
   return (
     <div className="grid place-items-center h-screen bg-blue-100">
       <div className="flex flex-col w-full md:w-2/4">
-        <div className="grid place-items-center mb-12">
+        {/* <div className="grid place-items-center mb-12">
           <h1 className="text-6xl">Contacts App</h1>
-        </div>
+        </div> */}
         <div className="shadow-lg text-xl rounded-xl  p-8 bg-white dark:bg-gray-800 relative overflow-hidden">
           <Link to="/contacts">
             <div className="flex items-center mb-2 rounded justify-between   p-3 hover:bg-green-200 bg-green-100">
